@@ -1,0 +1,33 @@
+{
+  "name": "docusaurus-plugin-terminology",
+  "version": "0.1.0",
+  "description": "Terminology and glossary plugin for Docusaurus 3",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "docusaurus",
+    "docusaurus-plugin",
+    "glossary",
+    "terminology",
+    "tooltip",
+    "mdx"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/USERNAME/docusaurus-plugin-terminology.git"
+  },
+  "bugs": {
+    "url": "https://github.com/USERNAME/docusaurus-plugin-terminology/issues"
+  },
+  "homepage": "https://github.com/USERNAME/docusaurus-plugin-terminology#readme",
+  "peerDependencies": {
+    "@docusaurus/core": "^3.0.0",
+    "@docusaurus/preset-classic": "^3.0.0",
+    "react": "^18.0.0"
+  },
+  "dependencies": {
+    "@tippyjs/react": "^4.2.6",
+    "gray-matter": "^4.0.3",
+    "unist-util-visit": "^5.0.0"
+  }
+}
