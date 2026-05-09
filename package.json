@@ -14,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/USERNAME/docusaurus-plugin-terminology.git"
+    "url": "git+https://github.com/schilke/docusaurus-plugin-terminology.git"
   },
   "bugs": {
-    "url": "https://github.com/USERNAME/docusaurus-plugin-terminology/issues"
+    "url": "https://github.com/schilke/docusaurus-plugin-terminology/issues"
   },
-  "homepage": "https://github.com/USERNAME/docusaurus-plugin-terminology#readme",
+  "homepage": "https://github.com/schilke/docusaurus-plugin-terminology#readme",
   "peerDependencies": {
     "@docusaurus/core": "^3.0.0",
     "@docusaurus/preset-classic": "^3.0.0",

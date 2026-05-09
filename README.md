@@ -1,69 +1,98 @@
-# @schilke/docusaurus-plugin-terminology
+# docusaurus-plugin-terminology
 
 ## Overview
 
-This [Docusaurus](https://github.com/facebook/docusaurus) plugin is a complete rewrite of [@grnet/docusaurus-terminology](https://github.com/grnet/docusaurus-terminology). It's based on the same ideas but doesn't rely on webpack and uses a more robust handling of the terms' links.  
+Terminology/glossary plugin for [Docusaurus](https://github.com/facebook/docusaurus) 3 with:
+
+- glossary generation
+- term tooltips
+- MDX support
+- i18n support
+- Tippy.js integration
+
+The idea for this plugin originates from [@grnet/docusaurus-terminology](https://github.com/grnet/docusaurus-terminology). It's based on the same general concept but doesn't rely on webpack and uses a more robust handling of the terms' links.  
 It's compatible and tested with Docusaurus 3.7.0.
 
 ## Features
 
-- **Glossary Support**: Automatically generates a glossary page from Markdown files in the `docs/glossary` directory.
-- **Localized Glossary**: Supports multiple locales and ensures fallback to the default locale for missing terms.
-- **Term Tooltip**: Adds tooltips to glossary term links in Markdown files using the `TermTooltip` component.
-- **Customizable**: Allows customization of term links and tooltips via plugin options.
+- Define terms as Markdown files
+- Automatic glossary generation: Automatically generates a glossary page from Markdown files in the `docs/glossary` directory.
+- Tooltips on glossary links: Adds tooltips to glossary term links in Markdown files using the `TermTooltip` component.
+- Locale-aware glossary support: Supports multiple locales and ensures fallback to the default locale for missing terms.
+- Allows customization of term links and tooltips via plugin options.
+- Compatible with Docusaurus 3 + React 18
+- SSR-safe MDX integration
 
 ## Installation
 
 Install the plugin using npm or yarn:
 
 ```bash
-npm install @schilke/docusaurus-plugin-terminology
+npm install docusaurus-plugin-terminology
 ```
 
 or
 
 ```bash
-yarn add @schilke/docusaurus-plugin-terminology
+yarn add docusaurus-plugin-terminology
 ```
 
-## Usage
+### Configuration
 
-### Add the Plugin to Your Docusaurus Config
+Add the plugin to `docusaurus.config.js`:
 
-Update your `docusaurus.config.js` file to include the plugin:
-
-```javascript
-module.exports = {
-  plugins: [
-    [
-      '@schilke/docusaurus-plugin-terminology',
-      {
-        // Optional configuration options
-      },
-    ],
-  ],
-};
+```js
+plugins: [
+  [
+    'docusaurus-plugin-terminology',
+    {}
+  ]
+],
 ```
 
-### Create Glossary Files
+---
 
-Add Markdown files for glossary terms in the `docs/glossary` directory. Each file should contain metadata in the frontmatter:
+### Usage
+
+Create a `glossary` directory within `docs` and add Markdown files for your terms in that directory.  
+Structure example:
+
+```text
+docs/
+└── glossary/
+    ├── ai.md
+    ├── css.md
+    ├── ftp.md
+    ├── html.md
+    ├── …
+    ├── …
+    └── www.md
+```
+
+### Example Term File
+
+Each file should contain metadata in the frontmatter:
 
 ```yaml
 ---
-title: Term Name
-description: A brief description of the term.
+title: AI - »Artificial Intelligence«
+description: Intelligence of machines.
 ---
+```
+```markdown
+The capability of computational systems to perform tasks typically associated with human intelligence, such as learning, reasoning, problem-solving, perception, and decision-making. It is a field of research in engineering, mathematics and computer science that develops and studies methods and software that enable machines to perceive their environment and use learning and intelligence to take actions that maximize their chances of achieving defined goals.  
 
-Additional content about the term.
+*From [Artificial intelligence - Wikipedia](https://en.wikipedia.org/wiki/Artificial_intelligence#Techniques)*
+
 ```
 
 ### Use Term Links in Markdown
 
-Link to glossary terms in your Markdown files using the `/docs/glossary/TERM_SLUG` format:
+Link to terms in your Markdown files using the `/docs/glossary/TERM_SLUG` format.  
+Example:
 
 ```markdown
-[Term Name](/docs/glossary/term-name)
+[AI](/docs/glossary/ai)
 ```
 
 The plugin will automatically transform these links into tooltips.
@@ -77,6 +106,11 @@ The plugin provides a `Glossary` component that displays all glossary terms grou
 ### Term Tooltip
 
 The `TermTooltip` component is used to display tooltips for glossary terms. It is automatically applied to term links in Markdown files.
+
+#### Styling
+
+Override tooltip styles via CSS.
+
 
 ## File Structure
 
