@@ -10,14 +10,26 @@ const { visit } = require('unist-util-visit');
  * Transforms links to glossary terms in the tree to MDX JSX elements.
  * @returns {Function} A function that transforms links in the tree to MDX JSX elements.
  */
-function termLinkTransformer() {
+function termLinkTransformer(options = {}) {
+
+  const routeBasePath =
+    options.routeBasePath || '/docs/terms/';
   return (tree, file) => {
     visit(tree, 'link', (node, index, parent) => {
       const href = node.url || '';
 
       // Match links like [TERM](/docs/glossary/TERM)
-      if (/^\/docs\/glossary\/[\w-]+$/.test(href)) {
-        const termSlug = href.replace('/docs/glossary/', '');
+      const escapedRoute = routeBasePath.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
+      );
+
+      const termRegex = new RegExp(
+        `^${escapedRoute}[\\w-]+$`
+      );
+
+      if (termRegex.test(href)) {
+        const termSlug = href.replace(routeBasePath, '');
         const termName = node.children.map((n) => n.value || '').join('');
 
         // Replace with a valid MDX JSX element instead of raw HTML

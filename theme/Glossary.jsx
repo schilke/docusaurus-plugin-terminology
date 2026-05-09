@@ -5,8 +5,13 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 export default function Glossary() {
   const { i18n } = useDocusaurusContext();
-  const { terms } = usePluginData('docusaurus-plugin-terminology');
-  const localeTerms = terms[i18n.currentLocale] || {};
+  const pluginData = usePluginData('docusaurus-plugin-terminology');
+
+  const localeTerms =
+    pluginData.terms?.[i18n.currentLocale] || {};
+
+  const routeBasePath =
+    pluginData.routeBasePath || '/docs/terms/';
   const termEntries = Object.entries(localeTerms);
 
   if (termEntries.length === 0) {
@@ -55,7 +60,7 @@ export default function Glossary() {
                     style={{ listStyleType: 'none' }}
                 >
                   <strong>
-                    <a href={`/docs/glossary/${key}`}>{name}</a>:
+                    <a href={`${routeBasePath}${key}`}>{name}</a>:
                   </strong>{' '}
                   {description}
                 </li>

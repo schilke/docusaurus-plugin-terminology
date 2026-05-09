@@ -3,7 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const matter = require('gray-matter');
 
-module.exports = function (context, options) {
+module.exports = function (context, options = {}) {
+
+    const termsDir = options.termsDir || 'terms';
+    const routeBasePath = options.routeBasePath || '/docs/terms/';
+
     //console.log('[plugin] docusaurus-plugin-terminology loaded');
     return {
         name: 'docusaurus-plugin-terminology',
@@ -12,7 +16,10 @@ module.exports = function (context, options) {
             mdOptions.remarkPlugins = mdOptions.remarkPlugins || [];
             mdOptions.remarkPlugins.push([
                 require('./remark/term-link-transformer'),
-                options || {},
+                {
+                    termsDir,
+                    routeBasePath,
+                },
             ]);
             //console.log('[plugin] extendMarkdownOptions: registered termLinkTransformer');
         },
@@ -31,8 +38,11 @@ module.exports = function (context, options) {
             
             for (const locale of locales) {
             const docsDir = locale === defaultLocale
-            ? path.resolve(siteDir, 'docs/glossary')
-            : path.resolve(siteDir, `i18n/${locale}/docusaurus-plugin-content-docs/current/glossary`);
+            ? path.resolve(siteDir, `docs/${termsDir}`)
+            : path.resolve(
+                siteDir,
+                `i18n/${locale}/docusaurus-plugin-content-docs/current/${termsDir}`
+            );
             
             if (!fs.existsSync(docsDir)) continue;
             
@@ -89,7 +99,9 @@ module.exports = function (context, options) {
             // Expose for use in components
             setGlobalData({
                 terms: termsData,
-                glossaryDataPath, // now properly defined
+                glossaryDataPath,
+                routeBasePath,
+                termsDir,
             });
         },
         
