@@ -158,6 +158,22 @@ i18n/de/docusaurus-plugin-content-docs/current/terms/
 4. Generates a static glossary JSON data source for tooltip rendering
 5. Glossary data is exposed globally to Docusaurus theme components
 
+## Publishing to npm
+
+To publish the package to npm via GitHub Actions, create an npm token and add it to the repository secrets.
+
+How to generate an npm token:
+
+1. Log into your npm account at https://www.npmjs.com/
+2. Go to Access Tokens (https://www.npmjs.com/settings/<your-username>/tokens)
+3. Click "Generate New Token" → "Automation" and give it a name (e.g., "GH Actions publish").
+4. Copy the token once — you won't be able to see it again.
+5. In your GitHub repo, go to Settings → Secrets and variables → Actions → New repository secret.
+6. Name the secret `NPM_TOKEN` and paste the token value.
+
+The provided GitHub Actions workflow `/.github/workflows/publish.yml` publishes the package when you push a semver tag, e.g. `v0.1.0`.
+
+
 ### Internal Architecture
 Markdown links
 ↓

@@ -38,4 +38,8 @@
   "scripts": {
     "test": "jest --color"
   }
+  ,
+  "publishConfig": {
+    "access": "public"
+  }
 }
