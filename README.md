@@ -159,6 +159,16 @@ i18n/de/docusaurus-plugin-content-docs/current/terms/
 5. Glossary data is exposed globally to Docusaurus theme components
 
 
+## Examples (screenshots)
+
+Below are example screenshots illustrating how the plugin transforms a term link and displays the glossary entry. These images are taken from the included example site in `examples/site`.
+
+Tooltip example (link transformed into an interactive tooltip):
+
+![Tooltip preview](examples/images/tooltip.svg)
+
+Glossary page example: the `terms.md` page (id: glossary) renders the Glossary component and lists all terms alphabetically.
+
 ### Internal Architecture
 Markdown links
 ↓
