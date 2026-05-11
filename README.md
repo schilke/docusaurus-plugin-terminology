@@ -60,7 +60,12 @@ Add the plugin to `docusaurus.config.js`:
 plugins: [
   [
     'docusaurus-plugin-terminology',
-    {}
+    {
+      // options
+      termsDir: 'terms', // default: 'terms'
+      routeBasePath: '/docs/terms/', // default: '/docs/terms/'
+      hideTermsFromSidebar: true, // when true, plugin will create _category_.yml to hide individual term pages
+    }
   ]
 ],
 ```
@@ -71,22 +76,20 @@ plugins: [
 
 ### Defining terms
 
-Create a `glossary` directory within `docs`
+Create a `terms` directory within `docs` (the plugin default).
 
 Add Markdown files for your terms in that directory.  
 Structure example:
 
 ```text
 docs/
-├── glossary/        # glossary term definitions
+├── terms/           # terms definitions
 │   ├── ai.md
 │   ├── css.md
 │   ├── ftp.md
 │   ├── html.md
-│   ├── …
-│   ├── …
-│   └── www.md
-└── glossary.md      # glossary page
+│   └── ...
+└── terms.md         # glossary page (id: glossary)
 ```
 
 
@@ -109,11 +112,11 @@ The capability of computational systems to perform tasks typically associated wi
 
 ### Linking terms
 
-Link to terms in your Markdown files using the `/docs/glossary/TERM_SLUG` format.  
+Link to terms in your Markdown files using the `/docs/terms/TERM_SLUG` format (or adjust to your `termsDir`).  
 Example:
 
 ```markdown
-[AI](/docs/glossary/ai)
+[AI](/docs/terms/ai)
 ```
 
 The plugin will automatically transform these links into tooltips.
@@ -149,9 +152,9 @@ i18n/de/docusaurus-plugin-content-docs/current/terms/
 
 ## How it works
 
-1. The plugin scans `docs/glossary`
+1. The plugin scans `docs/terms` (or the directory configured via `termsDir`)
 2. Term metadata is extracted from frontmatter
-3. Markdown links matching `/docs/glossary/*` are transformed into MDX tooltip components
+3. Markdown links matching `/docs/terms/*` (or matching your `routeBasePath`) are transformed into MDX tooltip components
 4. Generates a static glossary JSON data source for tooltip rendering
 5. Glossary data is exposed globally to Docusaurus theme components
 
