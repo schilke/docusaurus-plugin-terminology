@@ -16,7 +16,8 @@ jobs:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
       - name: Install
-        run: npm ci
+        # Use npm install when package-lock.json is not present on repo
+        run: npm install --no-audit --no-fund
       - name: Pack
         run: npm pack
       - name: Publish to npm
