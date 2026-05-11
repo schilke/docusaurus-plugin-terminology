@@ -3,7 +3,22 @@ const path = require('path');
 const fs = require('fs');
 const matter = require('gray-matter');
 
-module.exports = function (context, options) {
+module.exports = function (context, options = {}) {
+
+    // Provide sensible defaults and read hide flag
+    options = Object.assign(
+        {
+            termsDir: 'terms',
+            routeBasePath: '/docs/terms/',
+            hideTermsFromSidebar: false,
+        },
+        options || {}
+    );
+
+    const termsDir = options.termsDir || 'terms';
+    const routeBasePath = options.routeBasePath || '/docs/terms/';
+    const hideTermsFromSidebar = options.hideTermsFromSidebar === true;
+
     //console.log('[plugin] docusaurus-plugin-terminology loaded');
     return {
         name: 'docusaurus-plugin-terminology',
@@ -12,9 +27,66 @@ module.exports = function (context, options) {
             mdOptions.remarkPlugins = mdOptions.remarkPlugins || [];
             mdOptions.remarkPlugins.push([
                 require('./remark/term-link-transformer'),
-                options || {},
+                {
+                    termsDir,
+                    routeBasePath,
+                },
             ]);
             //console.log('[plugin] extendMarkdownOptions: registered termLinkTransformer');
+        },
+        
+        /**
+         * Optionally write a _category_.yml into the terms docs directory (and per-locale equivalents)
+         * so that the terms directory is represented by a single category entry that can be hidden
+         * (className: hidden). This prevents the individual generated term files from showing up
+         * in the main docs sidebar.
+         */
+        async loadContent() {
+            if (!hideTermsFromSidebar) return null;
+
+            const CATEGORY_FILENAME = '_category_.yml';
+            const makeCategoryYaml = (label = 'Glossar') => `label: ${label}
+className: hidden
+collapsed: true
+link:
+  type: doc
+  id: glossary
+`;
+
+            const writeIfMissing = (docsDir) => {
+                try {
+                    if (!fs.existsSync(docsDir)) return;
+                    const catPath = path.join(docsDir, CATEGORY_FILENAME);
+                    if (fs.existsSync(catPath)) {
+                        // Respect an existing file; do not overwrite
+                        return;
+                    }
+                    fs.writeFileSync(catPath, makeCategoryYaml(), { encoding: 'utf8' });
+                    console.info(`[docusaurus-plugin-terminology] wrote ${CATEGORY_FILENAME} to ${docsDir}`);
+                } catch (err) {
+                    // Non-fatal: warn and continue
+                    console.warn(`[docusaurus-plugin-terminology] failed to write ${CATEGORY_FILENAME} to ${docsDir}: ${err.message}`);
+                }
+            };
+
+            // default locale docs dir
+            const defaultDocsDir = path.resolve(context.siteDir, `docs/${termsDir}`);
+            writeIfMissing(defaultDocsDir);
+
+            // localized docs dirs (if i18n present)
+            const { i18n } = context || {};
+            if (i18n && Array.isArray(i18n.locales)) {
+                for (const locale of i18n.locales) {
+                    if (locale === i18n.defaultLocale) continue;
+                    const localizedDocsDir = path.resolve(
+                        context.siteDir,
+                        `i18n/${locale}/docusaurus-plugin-content-docs/current/${termsDir}`
+                    );
+                    writeIfMissing(localizedDocsDir);
+                }
+            }
+
+            return null;
         },
         
         /**
@@ -31,8 +103,11 @@ module.exports = function (context, options) {
             
             for (const locale of locales) {
             const docsDir = locale === defaultLocale
-            ? path.resolve(siteDir, 'docs/glossary')
-            : path.resolve(siteDir, `i18n/${locale}/docusaurus-plugin-content-docs/current/glossary`);
+            ? path.resolve(siteDir, `docs/${termsDir}`)
+            : path.resolve(
+                siteDir,
+                `i18n/${locale}/docusaurus-plugin-content-docs/current/${termsDir}`
+            );
             
             if (!fs.existsSync(docsDir)) continue;
             
@@ -89,7 +164,9 @@ module.exports = function (context, options) {
             // Expose for use in components
             setGlobalData({
                 terms: termsData,
-                glossaryDataPath, // now properly defined
+                glossaryDataPath,
+                routeBasePath,
+                termsDir,
             });
         },
         
