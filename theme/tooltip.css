@@ -1,0 +1,36 @@
+/**
+ * Tooltip styling for term links.
+ * Applied on top of `tippy.js/dist/tippy.css`.
+ */
+
+.tippy-box[data-theme~='terminology'] {
+  background-color: var(--ifm-background-surface-color, #fff);
+  color: var(--ifm-font-color-base, #1c1e21);
+  border: 1px solid var(--ifm-color-emphasis-300, rgba(0, 0, 0, 0.1));
+  border-radius: var(--ifm-global-radius, 0.4rem);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+}
+
+.tippy-box[data-theme~='terminology'] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box[data-theme~='terminology'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: var(--ifm-color-emphasis-300, rgba(0, 0, 0, 0.1));
+}
+
+.tippy-box[data-theme~='terminology'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: var(--ifm-color-emphasis-300, rgba(0, 0, 0, 0.1));
+}
+
+.tippy-box[data-theme~='terminology'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: var(--ifm-color-emphasis-300, rgba(0, 0, 0, 0.1));
+}
+
+.tippy-box[data-theme~='terminology'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: var(--ifm-color-emphasis-300, rgba(0, 0, 0, 0.1));
+}

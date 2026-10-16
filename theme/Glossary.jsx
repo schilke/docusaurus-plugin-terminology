@@ -1,74 +1,80 @@
-// docusaurus-plugin-terminology/theme/Glossary.jsx
 import React from 'react';
-import { usePluginData } from '@docusaurus/useGlobalData';
+import Link from '@docusaurus/Link';
+import {usePluginData} from '@docusaurus/useGlobalData';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import styles from './styles.module.css';
+import {normalizeRouteBasePath} from './terminology';
 
+/**
+ * A–Z glossary listing every term with its short description.
+ *
+ * Usage in any Markdown/MDX file:
+ *
+ * ```mdx
+ * import Glossary from '@theme/Glossary';
+ *
+ * <Glossary />
+ * ```
+ */
 export default function Glossary() {
-  const { i18n } = useDocusaurusContext();
+  const {i18n} = useDocusaurusContext();
   const pluginData = usePluginData('docusaurus-plugin-terminology');
 
   const localeTerms =
-    pluginData.terms?.[i18n.currentLocale] || {};
+    pluginData?.terms?.[i18n.currentLocale] ??
+    pluginData?.terms?.[i18n.defaultLocale] ??
+    {};
 
-  const routeBasePath =
-    pluginData.routeBasePath || '/docs/terms/';
-  const termEntries = Object.entries(localeTerms);
+  const routeBasePath = normalizeRouteBasePath(
+    pluginData?.routeBasePath ?? '/terms/',
+  );
+
+  const termEntries = Object.entries(localeTerms).sort(([, a], [, b]) =>
+    a.name.localeCompare(b.name),
+  );
 
   if (termEntries.length === 0) {
     return <p>No glossary terms found.</p>;
   }
 
-  // Group terms by their starting letter
-  const groupedTerms = termEntries.reduce((acc, [key, { name, description }]) => {
-    const firstLetter = name[0].toUpperCase();
-    if (!acc[firstLetter]) {
-      acc[firstLetter] = [];
-    }
-    acc[firstLetter].push({ key, name, description });
+  const groupedTerms = termEntries.reduce((acc, [slug, term]) => {
+    const firstLetter = (term.name[0] || '#').toUpperCase();
+    (acc[firstLetter] ||= []).push({slug, ...term});
     return acc;
   }, {});
 
-  const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
-
-  // Filter out letters with no terms
-  const filteredAlphabet = alphabet.filter((letter) => groupedTerms[letter]);
+  const alphabet = Object.keys(groupedTerms).sort();
 
   return (
-    <div className="container">
-      {/* A-Z Index */}
-      <div className="container margin-bottom--lg">
-        {filteredAlphabet.map((letter) => (
+    <div>
+      <nav className={styles.alphabetNav} aria-label="Glossary index">
+        {alphabet.map((letter) => (
           <a
-            className="button button--sm button--outline button--primary col col--1 margin--xs"
             key={letter}
-            href={`#${letter}`}
-          >
+            className="button button--sm button--outline button--primary"
+            href={`#${letter}`}>
             {letter}
           </a>
         ))}
-      </div>
+      </nav>
 
-      {/* Terms List */}
-      <div>
-        {filteredAlphabet.map((letter) => (
-          <div key={letter} id={letter} className="container margin-vert--xs padding-vert--lg shadow--md">
-            <h2>{letter}</h2>
-            <ul>
-              {groupedTerms[letter].map(({ key, name, description }) => (
-                <li 
-                    key={key}
-                    style={{ listStyleType: 'none' }}
-                >
+      {alphabet.map((letter) => (
+        <section key={letter} id={letter} className={styles.glossarySection}>
+          <h2>{letter}</h2>
+          <dl className={styles.glossaryList}>
+            {groupedTerms[letter].map(({slug, name, description}) => (
+              <div key={slug} className={styles.glossaryEntry}>
+                <dt>
                   <strong>
-                    <a href={`${routeBasePath}${key}`}>{name}</a>:
-                  </strong>{' '}
-                  {description}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+                    <Link to={`${routeBasePath}${slug}`}>{name}</Link>
+                  </strong>
+                </dt>
+                <dd>{description}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
     </div>
   );
 }

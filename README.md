@@ -1,140 +1,95 @@
 # docusaurus-plugin-terminology
 
+Terminology & glossary support for [Docusaurus 3](https://docusaurus.io):
 
-## Overview
+- 📄 **Term pages** — each term is a Markdown/MDX file rendered as its own page.
+- 💬 **Link tooltips** — links to terms are automatically enhanced with a
+  definition tooltip. **Zero configuration**, SSR-safe (the link is in the HTML).
+- 🔤 **Glossary page** — an A–Z glossary generated from your term files.
+- 🌍 **i18n** — locale-aware terms with fallback to the default locale.
+- ⚛️ **React 18 & 19**, Docusaurus 3.7 → 3.10.
 
-Terminology/glossary plugin for [Docusaurus](https://github.com/facebook/docusaurus) 3 with:
+```md
+Check out [AI](/terms/ai) for more details.
+```
 
-- glossary generation
-- term tooltips
-- MDX support (Built on MDX AST transformations instead of raw HTML replacement for improved Docusaurus 3 compatibility)
-- i18n support
-- Tippy.js integration
+renders a normal link that also shows the term's description on hover:
 
-This plugin is inspired by [@grnet/docusaurus-terminology](https://github.com/grnet/docusaurus-terminology). It's based on the same general concept but uses MDX remark transformations instead of webpack loader injection and uses a more robust handling of the terms' links.  
-Compatible with Docusaurus 3.x and React 18.  
-Tested with Docusaurus 3.7.0.
-
-
-## Features
-
-- Define terms as Markdown files.
-- Glossary component: Automatic glossary data aggregation from Markdown term files in `docs/glossary`.
-- Tooltips on glossary links: Automatically transforms glossary links into interactive tooltip components.
-- Locale-aware glossary support: Supports multiple locales and ensures fallback to the default locale for missing terms.
-- Compatible with Docusaurus 3 + React 18
-- SSR-safe MDX integration
-
+> Check out <ins>AI</ins><sup>*</sup> *— Artificial Intelligence: the simulation
+> of human intelligence processes by machines.*
 
 ## Compatibility
 
-| Package | Version |
-|---|---|
-| Docusaurus | 3.7.0+ |
-| React | 18+ |
-| Node.js | 18+ recommended |
+| Package | Supported |
+| --- | --- |
+| Docusaurus | `3.7` – `3.10` (tested against `3.10.2`) |
+| React | `18` and `19` |
+| Node.js | `18+` (Docusaurus `3.10` itself requires `20+`) |
 
-The plugin supports `.md` and `.mdx` files.
-
+Both `.md` and `.mdx` term files are supported.
 
 ## Installation
-
-Install the plugin using npm or yarn:
 
 ```bash
 npm install docusaurus-plugin-terminology
 ```
 
-or
+## Quick start
 
-```bash
-yarn add docusaurus-plugin-terminology
+The package's default export is a **preset**. Register it **after** the classic
+preset so its theme wins theme resolution (this is what makes tooltips work
+without any extra configuration):
+
+```js title="docusaurus.config.js"
+module.exports = {
+  presets: [
+    ['classic', { /* ... your options ... */ }],
+    [
+      'docusaurus-plugin-terminology',
+      {
+        termsDir: 'terms',        // top-level directory, default: 'terms'
+        routeBasePath: '/terms/', // public URL, default: '/terms/'
+      },
+    ],
+  ],
+};
 ```
 
-
-## Configuration
-
-Add the plugin to `docusaurus.config.js`:
-
-```js
-plugins: [
-  [
-    'docusaurus-plugin-terminology',
-    {
-      // options
-      termsDir: 'terms', // default: 'terms'
-      routeBasePath: '/docs/terms/', // default: '/docs/terms/'
-      hideTermsFromSidebar: true, // when true, plugin will create _category_.yml to hide individual term pages
-    }
-  ]
-],
-```
-
----
-
-## Usage
-
-### Defining terms
-
-Create a `terms` directory within `docs` (the plugin default).
-
-Add Markdown files for your terms in that directory.  
-Structure example:
+Then create a `terms/` directory at the root of your site:
 
 ```text
-docs/
-├── terms/           # terms definitions
+.
+├── docs/
+│   └── glossary.md   # a page rendering <Glossary />
+├── terms/
 │   ├── ai.md
 │   ├── css.md
-│   ├── ftp.md
-│   ├── html.md
-│   └── ...
-└── terms.md         # glossary page (id: glossary)
+│   └── ftp.md
+└── docusaurus.config.js
 ```
 
-
-#### Example Term File
-
-Each file should contain metadata in the frontmatter:
-
-```yaml
+```md title="terms/ai.md"
 ---
-title: AI - »Artificial Intelligence«
-description: Intelligence of machines.
+title: AI
+description: Artificial Intelligence — the simulation of human intelligence processes by machines.
 ---
-```
-```markdown
-The capability of computational systems to perform tasks typically associated with human 
-intelligence, such as learning, reasoning, problem-solving, perception, and decision-making. 
-It is a field of research in engineering, mathematics and computer science that develops and 
-studies methods and software that enable machines to perceive their environment and use 
-learning and intelligence to take actions that maximize their chances of achieving defined goals.  
 
-*From [Artificial intelligence - Wikipedia](https://en.wikipedia.org/wiki/Artificial_intelligence#Techniques)*
-
+Artificial intelligence (AI) is the simulation of human intelligence processes
+by computer systems.
 ```
 
-### Linking terms
+Term pages are now available at `/terms/ai`, `/terms/css`, … and linking to
+them from anywhere in your Markdown shows a tooltip:
 
-Link to terms in your Markdown files using the `/docs/terms/TERM_SLUG` format (or adjust to your `termsDir`).  
-Example:
-
-```markdown
-[AI](/docs/terms/ai)
+```md
+See [AI](/terms/ai) and [CSS](/terms/css).
 ```
 
-The plugin will automatically transform these links into tooltips.
+## Glossary page
 
+Add a docs page (anywhere in your `docs/`) that renders the glossary component:
 
-### Glossary Page
-
-The plugin provides a `Glossary` component that displays all glossary terms grouped alphabetically. You can use this component in your custom pages.
-
-#### Create a glossary page
-
-E.g. `glossary.md` (the file name doesn't matter)
-
-```markdown
+```mdx title="docs/glossary.md"
 ---
 id: glossary
 title: Glossary
@@ -145,73 +100,125 @@ import Glossary from '@theme/Glossary';
 <Glossary />
 ```
 
-### i18n
+`<Glossary />` displays every term (grouped A–Z) with its description and a link
+to its term page.
 
-Localized term definitions can be placed in:
+## Options
 
-```text
-i18n/de/docusaurus-plugin-content-docs/current/terms/
-```
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `termsDir` | `string` | `'terms'` | Directory containing the term files, relative to the site root. |
+| `routeBasePath` | `string` | `'/terms/'` | Public URL prefix of the generated term pages, also used to detect term links. |
+| `docsInstance` | `boolean` | `true` | Register a dedicated docs instance for the term pages. Set to `false` for [legacy mode](#legacy-mode). |
+| `hideTermsFromSidebar` | `boolean` | `false` | Legacy mode only: write a `_category_.yml` hiding the term docs from the main sidebar. |
+| `sidebarLabel` | `string` | `'Glossary'` | Legacy mode only: label of the hidden sidebar category. |
+| `glossarySlug` | `string` | `'glossary'` | Legacy mode only: doc id of the glossary page the hidden category links to. |
 
+Invalid options throw a descriptive error at build time.
 
 ## How it works
 
-1. The plugin scans `docs/terms` (or the directory configured via `termsDir`)
-2. Term metadata is extracted from frontmatter
-3. Markdown links matching `/docs/terms/*` (or matching your `routeBasePath`) are transformed into MDX tooltip components
-4. Generates a static glossary JSON data source for tooltip rendering
-5. Glossary data is exposed globally to Docusaurus theme components
+1. A dedicated `@docusaurus/plugin-content-docs` instance (id `terminology`)
+   renders the files in `termsDir` at `routeBasePath` — no sidebar, no docs
+   ordering surprises.
+2. The terminology plugin reads the same files and exposes a locale-aware
+   glossary (name + short description) as global plugin data.
+3. The terminology theme overrides the MDX `a` component. A normal Markdown link
+   is delegated to Docusaurus, while a link pointing at `routeBasePath` is
+   rendered as `<TermTooltip>` with the glossary description. Because this
+   happens at render time, the link is part of the server-rendered HTML and no
+   remark plugin, `MDXComponents` swizzle, or DOM scanning is required.
 
+> **Why register the preset after `classic`?** Docusaurus resolves
+> `@theme/MDXComponents/A` by theme priority. Listing the terminology preset
+> last makes its theme the highest-priority provider, which is what lets it
+> override the link component.
 
-### Internal Architecture
-Markdown links
-↓
-remark plugin transformation
-↓
-<TermTooltip />
-↓
-MDX component mapping
-↓
-Tippy.js tooltip rendering
+## Descriptions
 
+The tooltip text is taken from `description` in the frontmatter when present,
+otherwise from the first paragraph of the term body (Markdown is stripped and
+the result is truncated). `summary` and `excerpt` are also accepted as
+frontmatter aliases.
 
-### Styling
+## i18n
 
-Override tooltip styles via CSS.
+Localized term files are picked up automatically. Supported locations:
 
-
-## File Structure
-
-The plugin's file structure is as follows:
-
-```
-docusaurus-plugin-terminology
-    ├── remark
-    │   └── term-link-transformer.js
-    ├── theme
-    │   ├── Glossary.jsx
-    │   └── tooltip.js
-    ├── index.js
-    ├── LICENSE
-    └── README.md
+```text
+i18n/<locale>/<termsDir>/                                   # e.g. i18n/de/terms/ai.md
+i18n/<locale>/docusaurus-plugin-content-docs-terminology/current/
 ```
 
-- `remark/term-link-transformer.js`: Transforms glossary term links in Markdown files into `TermTooltip` components.
-- `theme/Glossary.jsx`: Renders the glossary page.
-- `theme/tooltip.js`: Handles tooltips for glossary terms.
-- `index.js`: Main plugin entry point.
+Missing localized terms fall back to the default locale, so you only translate
+what you need.
 
+## Styling
+
+Term links use a dotted underline and a tippy.js tooltip. Override the look with
+plain CSS:
+
+```css
+.tippy-box[data-theme~='terminology'] {
+  /* your styles */
+}
+```
+
+## Legacy mode (`0.1.x` layout)
+
+If your terms live **inside** `docs/` (e.g. `docs/terms/ai.md`) you can keep that
+layout:
+
+```js
+presets: [
+  ['classic', { /* ... */ }],
+  [
+    'docusaurus-plugin-terminology',
+    {
+      docsInstance: false,
+      termsDir: 'terms',          // -> docs/terms
+      routeBasePath: '/docs/terms/',
+      hideTermsFromSidebar: true, // hide the term docs in the sidebar
+    },
+  ],
+],
+```
+
+## Migrating from `0.1.x`
+
+`0.2.0` is a breaking release:
+
+1. **Registration changed**: the package is now a preset (registered in
+   `presets`) instead of a plugin (in `plugins`).
+2. **Terms moved to the top level**: move `docs/terms/` to `terms/` and set
+   `routeBasePath: '/terms/'`. (Or keep the old layout with `docsInstance: false`.)
+3. **Links changed**: update links from `/docs/terms/<slug>` to `/terms/<slug>`.
+4. **Tooltips are zero-config**: the fragile client-side `theme/tooltip.js`
+   module was removed — nothing to configure.
+
+## Development
+
+```bash
+npm install          # install dev dependencies
+npm test             # unit tests (Jest)
+
+cd examples/site
+npm install
+npm start            # http://localhost:3000/docusaurus-plugin-terminology/
+npm run build        # production build (regression check)
+```
+
+The demo site in [`examples/site`](./examples/site) is the integration test: it
+builds on every CI run against a Docusaurus × React matrix.
 
 ## Contributing
 
-Contributions are welcome! Feel free to open issues or submit pull requests to improve the plugin.
-
+Issues and pull requests are welcome.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
-
+MIT — see [LICENSE](./LICENSE).
 
 ## Acknowledgments
 
-This plugin is inspired by [@grnet/docusaurus-terminology](https://github.com/grnet/docusaurus-terminology) and aims to provide a more robust and modern implementation.
+Inspired by [@grnet/docusaurus-terminology](https://github.com/grnet/docusaurus-terminology).

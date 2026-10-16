@@ -8,19 +8,20 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install
-        # Use npm install when package-lock.json is not present on repo
-        run: npm install --no-audit --no-fund
-      - name: Pack
-        run: npm pack
+          cache: npm
+      - run: npm ci
+      - name: Run tests
+        run: npm test
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+        run: npm publish --access public --provenance

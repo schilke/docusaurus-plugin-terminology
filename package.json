@@ -1,8 +1,41 @@
 {
   "name": "docusaurus-plugin-terminology",
-  "version": "0.1.0",
-  "description": "Terminology and glossary plugin for Docusaurus 3",
+  "version": "0.2.0",
+  "description": "Terminology and glossary plugin for Docusaurus 3: term pages, glossary page and SSR-safe link tooltips",
   "main": "index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./index.js"
+    },
+    "./plugin": {
+      "default": "./plugin.js"
+    },
+    "./theme": {
+      "default": "./theme-plugin.js"
+    },
+    "./options": {
+      "default": "./src/options.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "plugin.js",
+    "theme-plugin.js",
+    "src/",
+    "theme/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=18.0"
+  },
   "license": "MIT",
   "keywords": [
     "docusaurus",
@@ -10,6 +43,7 @@
     "glossary",
     "terminology",
     "tooltip",
+    "tippy",
     "mdx"
   ],
   "repository": {
@@ -21,24 +55,23 @@
   },
   "homepage": "https://github.com/schilke/docusaurus-plugin-terminology#readme",
   "peerDependencies": {
-    "@docusaurus/core": "^3.0.0",
-    "@docusaurus/preset-classic": "^3.0.0",
+    "@docusaurus/core": "^3.7.0",
+    "@docusaurus/plugin-content-docs": "^3.7.0",
+    "@docusaurus/preset-classic": "^3.7.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@tippyjs/react": "^4.2.6",
     "gray-matter": "^4.0.3",
-    "unist-util-visit": "^5.0.0"
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
-    "jest": "^29.0.0",
-    "memfs": "^3.4.13"
+    "jest": "^29.7.0",
+    "memfs": "^4.17.0"
   },
   "scripts": {
     "test": "jest --color"
-  }
-  ,
+  },
   "publishConfig": {
     "access": "public"
   }

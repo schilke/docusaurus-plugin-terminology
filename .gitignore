@@ -1,4 +1,19 @@
+# Dependencies
 node_modules
-package-lock.json
+
+# Docusaurus build output
 .docusaurus
 build
+.cache-loader
+
+# Package tarballs
+*.tgz
+
+# Coverage
+coverage
+
+# Logs / editors
+*.log
+.vscode/
+.idea/
+.DS_Store

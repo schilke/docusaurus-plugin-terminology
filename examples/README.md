@@ -1,9 +1,15 @@
-This folder contains a minimal example configuration showing how to use docusaurus-plugin-terminology inside a Docusaurus site.
+# Examples
 
-Instructions:
+- [`site/`](./site) — a full Docusaurus 3 demo used as the plugin's integration
+  test. It defines terms in a top-level `terms/` directory, renders a generated
+  glossary page and links to terms with tooltips.
 
-1. Create a Docusaurus site (or use an existing one).
-2. Install the plugin: `npm install docusaurus-plugin-terminology`.
-3. Add the plugin to your `docusaurus.config.js` as shown in the README.
-4. Create a `docs/terms` folder and add term `.md` files.
-5. Start the site and verify term tooltips and glossary page.
+```bash
+cd site
+npm install
+npm start        # http://localhost:3000/docusaurus-plugin-terminology/
+npm run build    # production build (regression check)
+```
+
+The demo is deployed to GitHub Pages by
+[`.github/workflows/deploy-demo.yml`](../.github/workflows/deploy-demo.yml).

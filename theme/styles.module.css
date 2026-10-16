@@ -1,0 +1,38 @@
+.termWrapper {
+  white-space: normal;
+}
+
+.termLink {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+.alphabetNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.glossarySection {
+  margin-bottom: 1.5rem;
+  scroll-margin-top: 4rem;
+}
+
+.glossaryList {
+  margin: 0;
+}
+
+.glossaryEntry {
+  margin-bottom: 0.75rem;
+}
+
+.glossaryEntry dt {
+  font-weight: 600;
+}
+
+.glossaryEntry dd {
+  margin: 0.15rem 0 0;
+}

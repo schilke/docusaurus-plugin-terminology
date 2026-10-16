@@ -2,20 +2,72 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
+  unit:
+    name: Unit tests (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['20', '22']
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - name: Install
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  integration:
+    name: Demo build (Docusaurus ${{ matrix.docusaurus }} / React ${{ matrix.react }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        docusaurus: ['3.7.0', '3.10.2']
+        react: ['18', '19']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            examples/site/package-lock.json
+
+      - name: Install plugin dependencies
         run: npm ci
-      - name: Run tests
-        run: npm test
+
+      - name: Install demo dependencies
+        working-directory: examples/site
+        run: npm ci
+
+      - name: Pin Docusaurus and React versions
+        working-directory: examples/site
+        shell: bash
+        run: |
+          ARGS="@docusaurus/core@${{ matrix.docusaurus }} \
+            @docusaurus/preset-classic@${{ matrix.docusaurus }} \
+            @docusaurus/plugin-content-docs@${{ matrix.docusaurus }} \
+            react@${{ matrix.react }} react-dom@${{ matrix.react }}"
+          # Docusaurus 3.7 is broken with webpack >= 5.94 (webpackbar passes
+          # ProgressPlugin options webpack now rejects). Pin webpack for it.
+          # Must be a single install: a later npm install would re-resolve
+          # Docusaurus from package.json.
+          case "${{ matrix.docusaurus }}" in
+            3.7.*) ARGS="$ARGS webpack@5.90.3" ;;
+          esac
+          npm install --no-save --no-audit --no-fund $ARGS
+
+      - name: Build demo site
+        working-directory: examples/site
+        run: npm run build
