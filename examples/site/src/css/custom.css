@@ -12,3 +12,95 @@
 [data-theme='dark'] {
   --ifm-color-primary: #25c2a0;
 }
+
+/* Navbar: visible link back to the plugin repository. */
+.navbar-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ifm-navbar-link-color);
+}
+
+.navbar-github-link:hover {
+  color: var(--ifm-navbar-link-hover-color);
+  text-decoration: none;
+}
+
+.navbar-github-link svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+/* Homepage: prominent call-to-action back to the repository. */
+.github-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-left: 4px solid var(--ifm-color-primary);
+  border-radius: var(--ifm-card-border-radius);
+  background: var(--ifm-background-surface-color);
+}
+
+.github-cta__icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+  vertical-align: -0.25rem;
+}
+
+.button.github-cta .github-cta__icon,
+.github-cta .button {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Shared social/profile icon row (homepage + footer). */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.social-links__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-color-emphasis-200);
+  transition: background-color 0.15s ease, color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.social-links__item:hover {
+  color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-300);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.social-links__item svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Footer is dark regardless of the site theme, so use footer link colors. */
+.footer .social-links__item {
+  color: var(--ifm-footer-link-color);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footer .social-links__item:hover {
+  color: var(--ifm-footer-link-hover-color);
+  background: rgba(255, 255, 255, 0.16);
+}
+
