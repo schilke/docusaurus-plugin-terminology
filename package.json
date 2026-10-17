@@ -1,6 +1,6 @@
 {
   "name": "docusaurus-plugin-terminology",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Terminology and glossary plugin for Docusaurus 3: term pages, glossary page and SSR-safe link tooltips",
   "main": "index.js",
   "types": "src/index.d.ts",
