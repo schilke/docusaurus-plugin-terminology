@@ -1,5 +1,13 @@
 # docusaurus-plugin-terminology
 
+[![npm version](https://img.shields.io/npm/v/docusaurus-plugin-terminology?style=flat-square&logo=npm)](https://www.npmjs.com/package/docusaurus-plugin-terminology)
+[![npm downloads](https://img.shields.io/npm/dm/docusaurus-plugin-terminology?style=flat-square)](https://www.npmjs.com/package/docusaurus-plugin-terminology)
+[![CI](https://github.com/schilke/docusaurus-plugin-terminology/actions/workflows/ci.yml/badge.svg)](https://github.com/schilke/docusaurus-plugin-terminology/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/docusaurus-plugin-terminology?style=flat-square)](./LICENSE)
+[![SLSA provenance](https://img.shields.io/badge/SLSA%20provenance-signed-blue?style=flat-square)](https://www.npmjs.com/package/docusaurus-plugin-terminology)
+
+**▶️ [See it in action](https://schilke.github.io/docusaurus-plugin-terminology/)** — a live demo built from [`examples/site`](./examples/site) and deployed to GitHub Pages.
+
 Terminology & glossary support for [Docusaurus 3](https://docusaurus.io):
 
 - 📄 **Term pages** — each term is a Markdown/MDX file rendered as its own page.
